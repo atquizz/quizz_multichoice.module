@@ -1,0 +1,11 @@
+name = Quiz Multichoice
+package = Quiz Question
+description = Multiple choice question type for quiz.
+core = 7.x
+
+dependencies[] = quizz
+dependencies[] = quizz_question
+dependencies[] = xautoload
+
+files[] = multichoice.classes.inc
+files[] = tests/MultichoiceTestCase.test
