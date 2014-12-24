@@ -3,9 +3,9 @@
 use Drupal\quizz_question\Entity\QuestionType;
 
 /**
- * Implements hook_quiz_question_info().
+ * Implements hook_quizz_question_info().
  */
-function quizz_multichoice_quiz_question_info() {
+function quizz_multichoice_quizz_question_info() {
   return array(
       'multichoice' => array(
           'name'              => t('Multiple choice question'),
