@@ -52,7 +52,7 @@ class MultichoiceTestCase extends QuizTestCase {
     $settings['alternatives'][2]['score_if_chosen'] = 0;
     $settings['alternatives'][2]['score_if_not_chosen'] = 0;
 
-    $question = quiz_question_entity_load($this->drupalCreateQuestion($settings)->qid);
+    $question = quizz_question_load($this->drupalCreateQuestion($settings)->qid);
 
     $this->assertNotNull($question->alternatives[0]['id'], 'Alternative A was created as part of question save.');
     $this->assertNotNull($question->alternatives[1]['id'], 'Alternative B was created as part of question save.');
