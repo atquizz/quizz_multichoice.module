@@ -140,7 +140,7 @@ class MultichoiceQuestion extends QuestionHandler {
 
       // We fetch ids for the existing answers belonging to this question
       // We need to figure out if an existing alternative has been changed or deleted.
-      $res = db_query('SELECT id FROM {quiz_multichoice_answers}
+      $res = db_query('SELECT id FROM {quizz_multichoice_answers}
               WHERE question_qid = :qid AND question_vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid));
 
       // We start by assuming that all existing alternatives needs to be deleted
@@ -167,7 +167,7 @@ class MultichoiceQuestion extends QuestionHandler {
       }
       foreach ($ids_to_delete as $id_to_delete) {
         if ($id_to_delete) {
-          db_delete('quiz_multichoice_answers')
+          db_delete('quizz_multichoice_answers')
             ->condition('id', $id_to_delete)
             ->execute();
         }
@@ -213,7 +213,7 @@ class MultichoiceQuestion extends QuestionHandler {
    */
   private function insertAlternative($i) {
     $alternatives = $this->_normalizeAlternative($this->question->alternatives[$i]);
-    db_insert('quiz_multichoice_answers')
+    db_insert('quizz_multichoice_answers')
       ->fields(array(
           'answer'                        => $alternatives['answer'],
           'answer_format'                 => $alternatives['answer_format'],
@@ -238,7 +238,7 @@ class MultichoiceQuestion extends QuestionHandler {
    */
   private function updateAlternative($i) {
     $alternatives = $this->_normalizeAlternative($this->question->alternatives[$i]);
-    db_update('quiz_multichoice_answers')
+    db_update('quizz_multichoice_answers')
       ->fields(array(
           'answer'                        => $alternatives['answer'],
           'answer_format'                 => $alternatives['answer_format'],
@@ -305,7 +305,7 @@ class MultichoiceQuestion extends QuestionHandler {
    */
   public function delete($only_this_version = FALSE) {
     $delete_properties = db_delete('quizz_multichoice_question')->condition('qid', $this->question->qid);
-    $delete_answers = db_delete('quiz_multichoice_answers')->condition('question_qid', $this->question->qid);
+    $delete_answers = db_delete('quizz_multichoice_answers')->condition('question_qid', $this->question->qid);
     $delete_results = db_delete('quizz_multichoice_answer')->condition('question_qid', $this->question->qid);
 
     if ($only_this_version) {
@@ -354,7 +354,7 @@ class MultichoiceQuestion extends QuestionHandler {
     // Load the answers
     $res = db_query('SELECT id, answer, answer_format, feedback_if_chosen, feedback_if_chosen_format,
             feedback_if_not_chosen, feedback_if_not_chosen_format, score_if_chosen, score_if_not_chosen, weight
-            FROM {quiz_multichoice_answers}
+            FROM {quizz_multichoice_answers}
             WHERE question_qid = :question_qid AND question_vid = :question_vid
             ORDER BY weight', array(
         ':question_qid' => $this->question->qid,

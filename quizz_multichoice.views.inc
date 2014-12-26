@@ -6,7 +6,7 @@
 function multichoice_views_data() {
   $data = array();
 
-  $data['quiz_multichoice_answers'] = array(
+  $data['quizz_multichoice_answers'] = array(
       // Table Definition
       'table'        => array(
           'group' => 'Quiz Multichoice Answers',
@@ -88,7 +88,7 @@ function multichoice_views_data() {
           ),
           'sort'  => array('handler' => 'views_handler_sort'),
       ),
-  ); // End quiz_multichoice_answers
+  ); // End quizz_multichoice_answers
 
   $data['quizz_multichoice_answer'] = array(
       'table'        => array(
@@ -229,7 +229,7 @@ function multichoice_views_data() {
           'sort'         => array('handler' => 'views_handler_sort'),
           'relationship' => array(
               'handler'    => 'views_handler_relationship',
-              'base'       => 'quiz_multichoice_answers',
+              'base'       => 'quizz_multichoice_answers',
               'field'      => 'answer_id',
               'base field' => 'id',
               'label'      => t('answer'),
