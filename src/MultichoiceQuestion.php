@@ -314,7 +314,7 @@ class MultichoiceQuestion extends QuestionHandler {
       $delete_results->condition('question_vid', $this->question->vid);
     }
 
-    // Delete from table quiz_multichoice_user_answer_multi
+    // Delete from table quizz_multichoice_answer_multi
     if ($only_this_version) {
       $user_answer_id = db_query('SELECT id FROM {quizz_multichoice_answer} WHERE question_qid = :qid AND question_vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchCol();
     }
@@ -323,7 +323,7 @@ class MultichoiceQuestion extends QuestionHandler {
     }
 
     if (!empty($user_answer_id)) {
-      db_delete('quiz_multichoice_user_answer_multi')
+      db_delete('quizz_multichoice_answer_multi')
         ->condition('user_answer_id', $user_answer_id, 'IN')
         ->execute();
     }

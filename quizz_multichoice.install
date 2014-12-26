@@ -43,7 +43,7 @@ function quizz_multichoice_schema() {
       ),
   );
 
-  $schema['quiz_multichoice_user_answer_multi'] = array(
+  $schema['quizz_multichoice_answer_multi'] = array(
       'fields'      => array(
           'user_answer_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'answer_id'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),

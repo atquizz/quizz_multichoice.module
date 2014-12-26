@@ -191,7 +191,7 @@ function multichoice_views_data() {
       ),
   ); // End quizz_multichoice_answer
 
-  $data['quiz_multichoice_user_answer_multi'] = array(
+  $data['quizz_multichoice_answer_multi'] = array(
       'table'          => array(
           'group' => t('Quiz Multichoice Answers'),
           'join'  => array(
@@ -235,7 +235,7 @@ function multichoice_views_data() {
               'label'      => t('answer'),
           ),
       ),
-  ); // End quiz_multichoice_user_answer_multi
+  ); // End quizz_multichoice_answer_multi
 
   return $data;
 }
