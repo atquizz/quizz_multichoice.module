@@ -100,7 +100,7 @@ function quizz_multichoice_add_alternative_ajax_callback($form, &$form_state) {
  * Implements hook_user_cancel().
  */
 function quizz_multichoice_user_cancel($edit, $account, $method) {
-  db_delete('quiz_multichoice_user_settings')
+  db_delete('quizz_multichoice_user_settings')
     ->condition('uid', $account->uid)
     ->execute();
 }

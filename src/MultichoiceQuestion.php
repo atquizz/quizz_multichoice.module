@@ -487,7 +487,7 @@ class MultichoiceQuestion extends QuestionHandler {
   private function saveUserSettings() {
     global $user;
 
-    db_merge('quiz_multichoice_user_settings')
+    db_merge('quizz_multichoice_user_settings')
       ->key(array('uid' => $user->uid))
       ->fields(array(
           'choice_random'  => $this->question->choice_random,

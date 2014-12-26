@@ -86,7 +86,7 @@ function quizz_multichoice_schema() {
       'indexes'     => array('quiz_id' => array('question_qid', 'question_vid'))
   );
 
-  $schema['quiz_multichoice_user_settings'] = array(
+  $schema['quizz_multichoice_user_settings'] = array(
       'fields'      => array(
           'uid'            => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'choice_multi'   => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),

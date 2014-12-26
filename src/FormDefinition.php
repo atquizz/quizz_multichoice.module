@@ -45,7 +45,7 @@ class FormDefinition {
   private function getUserSettings() {
     global $user;
     $res = db_query('SELECT choice_multi, choice_boolean, choice_random
-            FROM {quiz_multichoice_user_settings}
+            FROM {quizz_multichoice_user_settings}
             WHERE uid = :uid', array(':uid' => $user->uid))->fetchAssoc();
     return $res ? $res : FALSE;
   }
