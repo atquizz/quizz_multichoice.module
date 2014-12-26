@@ -90,7 +90,7 @@ function multichoice_views_data() {
       ),
   ); // End quiz_multichoice_answers
 
-  $data['quiz_multichoice_user_answers'] = array(
+  $data['quizz_multichoice_answer'] = array(
       'table'        => array(
           'group' => 'Quiz Multichoice Answers',
           'join'  => array(
@@ -189,14 +189,14 @@ function multichoice_views_data() {
           ),
           'sort'         => array('handler' => 'views_handler_sort'),
       ),
-  ); // End quiz_multichoice_user_answers
+  ); // End quizz_multichoice_answer
 
   $data['quiz_multichoice_user_answer_multi'] = array(
       'table'          => array(
           'group' => t('Quiz Multichoice Answers'),
           'join'  => array(
               'quiz_entity_revision' => array(
-                  'left_table' => 'quiz_multichoice_user_answers',
+                  'left_table' => 'quizz_multichoice_answer',
                   'left_field' => 'id',
                   'field'      => 'user_answer_id',
               ),

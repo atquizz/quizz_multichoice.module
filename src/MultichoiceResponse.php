@@ -37,7 +37,7 @@ class MultichoiceResponse extends ResponseHandler {
     }
     else { // We load the answer from the database
       $input_ids = db_query(
-        'SELECT answer_id FROM {quiz_multichoice_user_answers} ua
+        'SELECT answer_id FROM {quizz_multichoice_answer} ua
          LEFT OUTER JOIN {quiz_multichoice_user_answer_multi} uam ON(uam.user_answer_id = ua.id)
          WHERE ua.result_id = :result_id AND ua.question_vid = :question_vid', array(
           ':result_id'    => $result_id,
@@ -55,7 +55,7 @@ class MultichoiceResponse extends ResponseHandler {
    * @see QuizQuestionResponse#save()
    */
   public function save() {
-    $user_answer_id = db_insert('quiz_multichoice_user_answers')
+    $user_answer_id = db_insert('quizz_multichoice_answer')
       ->fields(array(
           'result_id'    => $this->result_id,
           'question_vid' => $this->question->vid,
@@ -81,7 +81,7 @@ class MultichoiceResponse extends ResponseHandler {
    */
   public function delete() {
     $user_answer_id = array();
-    $query = db_query('SELECT id FROM {quiz_multichoice_user_answers} WHERE question_qid = :qid AND question_vid = :vid AND result_id = :result_id', array(':qid' => $this->question->qid, ':vid' => $this->question->vid, ':result_id' => $this->result_id));
+    $query = db_query('SELECT id FROM {quizz_multichoice_answer} WHERE question_qid = :qid AND question_vid = :vid AND result_id = :result_id', array(':qid' => $this->question->qid, ':vid' => $this->question->vid, ':result_id' => $this->result_id));
     while ($user_answer = $query->fetch()) {
       $user_answer_id[] = $user_answer->id;
     }
@@ -92,7 +92,7 @@ class MultichoiceResponse extends ResponseHandler {
         ->execute();
     }
 
-    db_delete('quiz_multichoice_user_answers')
+    db_delete('quizz_multichoice_answer')
       ->condition('result_id', $this->result_id)
       ->condition('question_qid', $this->question->qid)
       ->condition('question_vid', $this->question->vid)
@@ -200,7 +200,7 @@ class MultichoiceResponse extends ResponseHandler {
 
     $result = db_query(
       'SELECT choice_order
-          FROM {quiz_multichoice_user_answers}
+          FROM {quizz_multichoice_answer}
           WHERE result_id = :result_id
             AND question_qid = :question_qid
             AND question_vid = :question_vid', array(

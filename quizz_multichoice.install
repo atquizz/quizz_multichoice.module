@@ -12,7 +12,7 @@
  * Implements hook_install().
  */
 function quizz_multichoice_install() {
-  variable_set('node_options_multichoice', array('status'));
+  // variable_set('node_options_multichoice', array('status'));
 }
 
 /**
@@ -29,7 +29,7 @@ function quizz_multichoice_uninstall() {
  */
 function quizz_multichoice_schema() {
   // Stores the users answers to a question.
-  $schema['quiz_multichoice_user_answers'] = array(
+  $schema['quizz_multichoice_answer'] = array(
       'fields'      => array(
           'id'           => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
           'result_id'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
@@ -67,9 +67,6 @@ function quizz_multichoice_schema() {
       'primary key' => array('qid', 'vid'),
   );
 
-  /*
-   * Holds each answer in the answer_collections.
-   */
   $schema['quiz_multichoice_answers'] = array(
       'fields'      => array(
           'id'                            => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
@@ -98,81 +95,6 @@ function quizz_multichoice_schema() {
       ),
       'primary key' => array('uid'),
   );
+
   return $schema;
-}
-
-/**
- * Add weights for multichoice alternatives.
- */
-function quizz_multichoice_update_7501() {
-  db_add_field('quiz_multichoice_answers', 'weight', array('type' => 'int', 'unsigned' => FALSE, 'not null' => TRUE, 'default' => 0));
-  db_query('UPDATE {quiz_multichoice_answers} SET weight = id');
-  return t('Added weights for multichoice alternatives.');
-}
-
-/**
- * Implements hook_quiz_question_upgrade_schema_node_to_entity().
- * Change schema per question structure changed.
- */
-function quizz_multichoice_quiz_question_upgrade_schema_node_to_entity() {
-  if (db_field_exists('quiz_multichoice_properties', 'nid')) {
-    $spec = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-    $spec_2 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-    $spec_3 = array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE);
-    db_change_field('quiz_multichoice_user_answers', 'question_nid', 'question_qid', $spec);
-    db_change_field('quiz_multichoice_properties', 'nid', 'qid', $spec_2);
-    db_change_field('quiz_multichoice_answers', 'question_nid', 'question_qid', $spec_3);
-  }
-}
-
-/**
- * Implements hook_quiz_question_upgrade_pre_drop_temp_columns().
- */
-function quizz_multichoice_quiz_question_upgrade_pre_drop_temp_columns() {
-  // quiz_multichoice_answers
-  db_query(
-    "UPDATE {quiz_multichoice_answers} as ma"
-    . " INNER JOIN {quiz_question_revision} qr ON ma.question_vid = qr.node_vid"
-    . " SET ma.question_qid = qr.qid, ma.question_vid = qr.vid"
-    . " WHERE 1"
-  );
-
-  // quiz_multichoice_properties
-  db_query(
-    "UPDATE {quiz_multichoice_properties} as mp"
-    . " INNER JOIN {quiz_question_revision} qr ON mp.vid = qr.node_vid"
-    . " SET mp.qid = qr.qid, mp.vid = qr.vid"
-    . " WHERE 1"
-  );
-
-  // quiz_multichoice_user_answers
-  db_query(
-    "UPDATE {quiz_multichoice_user_answers} as ua"
-    . " INNER JOIN {quiz_question_revision} qr ON ua.question_vid = qr.node_vid"
-    . " SET ua.question_qid = qr.qid, ua.question_vid = qr.vid"
-    . " WHERE 1"
-  );
-}
-
-/**
- * Make sure update script from main module is run before all.
- */
-function quizz_multichoice_update_7600() {
-  require_once drupal_get_path('module', 'quizz_question') . '/quizz_question.install';
-  return quizz_question_update_7600();
-}
-
-/**
- * Convert global configuration for questions to question type entity.
- */
-function quizz_multichoice_update_7601() {
-  foreach (quizz_question_get_types() as $question_type) {
-    if ('multichoice' === $question_type->handler) {
-      $question_type
-        ->setConfig('multichoice_def_num_of_alts', variable_get('multichoice_def_num_of_alts', 2))
-        ->setConfig('multichoice_def_scoring', variable_get('multichoice_def_scoring', 0))
-        ->save()
-      ;
-    }
-  }
 }

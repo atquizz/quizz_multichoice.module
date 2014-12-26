@@ -306,7 +306,7 @@ class MultichoiceQuestion extends QuestionHandler {
   public function delete($only_this_version = FALSE) {
     $delete_properties = db_delete('quiz_multichoice_properties')->condition('qid', $this->question->qid);
     $delete_answers = db_delete('quiz_multichoice_answers')->condition('question_qid', $this->question->qid);
-    $delete_results = db_delete('quiz_multichoice_user_answers')->condition('question_qid', $this->question->qid);
+    $delete_results = db_delete('quizz_multichoice_answer')->condition('question_qid', $this->question->qid);
 
     if ($only_this_version) {
       $delete_properties->condition('vid', $this->question->vid);
@@ -316,10 +316,10 @@ class MultichoiceQuestion extends QuestionHandler {
 
     // Delete from table quiz_multichoice_user_answer_multi
     if ($only_this_version) {
-      $user_answer_id = db_query('SELECT id FROM {quiz_multichoice_user_answers} WHERE question_qid = :qid AND question_vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchCol();
+      $user_answer_id = db_query('SELECT id FROM {quizz_multichoice_answer} WHERE question_qid = :qid AND question_vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchCol();
     }
     else {
-      $user_answer_id = db_query('SELECT id FROM {quiz_multichoice_user_answers} WHERE question_qid = :qid', array(':qid' => $this->question->qid))->fetchCol();
+      $user_answer_id = db_query('SELECT id FROM {quizz_multichoice_answer} WHERE question_qid = :qid', array(':qid' => $this->question->qid))->fetchCol();
     }
 
     if (!empty($user_answer_id)) {
