@@ -110,7 +110,7 @@ class MultichoiceQuestion extends QuestionHandler {
     $this->warn();
 
     if ($is_new) {
-      $id = db_insert('quiz_multichoice_properties')
+      $id = db_insert('quizz_multichoice_question')
         ->fields(array(
             'qid'            => $this->question->qid,
             'vid'            => $this->question->vid,
@@ -128,7 +128,7 @@ class MultichoiceQuestion extends QuestionHandler {
       }
     }
     else {
-      db_update('quiz_multichoice_properties')
+      db_update('quizz_multichoice_question')
         ->fields(array(
             'choice_multi'   => $this->question->choice_multi,
             'choice_random'  => $this->question->choice_random,
@@ -304,7 +304,7 @@ class MultichoiceQuestion extends QuestionHandler {
    * @see QuizQuestion#delete()
    */
   public function delete($only_this_version = FALSE) {
-    $delete_properties = db_delete('quiz_multichoice_properties')->condition('qid', $this->question->qid);
+    $delete_properties = db_delete('quizz_multichoice_question')->condition('qid', $this->question->qid);
     $delete_answers = db_delete('quiz_multichoice_answers')->condition('question_qid', $this->question->qid);
     $delete_results = db_delete('quizz_multichoice_answer')->condition('question_qid', $this->question->qid);
 
@@ -344,7 +344,7 @@ class MultichoiceQuestion extends QuestionHandler {
     }
     $props = parent::load();
 
-    $res_a = db_query('SELECT choice_multi, choice_random, choice_boolean FROM {quiz_multichoice_properties}
+    $res_a = db_query('SELECT choice_multi, choice_random, choice_boolean FROM {quizz_multichoice_question}
             WHERE qid = :qid AND vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchAssoc();
 
     if (is_array($res_a)) {

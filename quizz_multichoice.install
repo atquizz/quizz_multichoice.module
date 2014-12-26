@@ -56,7 +56,7 @@ function quizz_multichoice_schema() {
       ),
   );
 
-  $schema['quiz_multichoice_properties'] = array(
+  $schema['quizz_multichoice_question'] = array(
       'fields'      => array(
           'qid'            => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
           'vid'            => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
