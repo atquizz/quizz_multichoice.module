@@ -58,12 +58,12 @@ function quizz_multichoice_config_validate($form, $form_state) {
 function quizz_multichoice_theme($existing, $type, $theme, $path) {
   $path = drupal_get_path('module', 'quizz_multichoice') . '/theme';
   return array(
-      'multichoice_creation_form'              => array(
+      'quizz_multichoice_creation_form'        => array(
           'render element' => 'form',
           'path'           => $path,
           'file'           => 'quizz_multichoice.theme.inc',
       ),
-      'multichoice_answer_node_view'           => array(
+      'quizz_multichoice_answer_question_view' => array(
           'variables' => array(
               'alternatives' => NULL,
               'show_correct' => NULL,

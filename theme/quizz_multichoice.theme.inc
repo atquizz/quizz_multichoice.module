@@ -14,7 +14,7 @@
  * @todo Please document this function.
  * @see http://drupal.org/node/1354
  */
-function theme_multichoice_creation_form($variables) {
+function theme_quizz_multichoice_creation_form($variables) {
   $form = $variables['form'];
   $path = drupal_get_path('module', 'quizz_multichoice') . '/js/multichoice.js';
   drupal_add_js($path);
@@ -45,7 +45,7 @@ function theme_multichoice_creation_form($variables) {
  * @param $show_correct
  *  True if the user is allowed to view the solution
  */
-function theme_multichoice_answer_node_view($variables) {
+function theme_quizz_multichoice_answer_question_view($variables) {
   $alternatives = $variables['alternatives'];
   $show_correct = $variables['show_correct'];
   $header = array('', '');

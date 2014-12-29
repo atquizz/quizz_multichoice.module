@@ -67,7 +67,7 @@ function quizz_multichoice_schema() {
       'primary key' => array('qid', 'vid'),
   );
 
-  $schema['quizz_multichoice_answers'] = array(
+  $schema['quizz_multichoice_alternative'] = array(
       'fields'      => array(
           'id'                            => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
           'answer'                        => array('type' => 'text'),

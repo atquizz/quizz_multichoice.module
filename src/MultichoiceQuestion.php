@@ -140,8 +140,13 @@ class MultichoiceQuestion extends QuestionHandler {
 
       // We fetch ids for the existing answers belonging to this question
       // We need to figure out if an existing alternative has been changed or deleted.
-      $res = db_query('SELECT id FROM {quizz_multichoice_answers}
-              WHERE question_qid = :qid AND question_vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid));
+      $res = db_query(
+        'SELECT id
+         FROM {quizz_multichoice_alternative}
+         WHERE question_qid = :qid AND question_vid = :vid', array(
+          ':qid' => $this->question->qid,
+          ':vid' => $this->question->vid
+      ));
 
       // We start by assuming that all existing alternatives needs to be deleted
       $ids_to_delete = array();
@@ -165,10 +170,11 @@ class MultichoiceQuestion extends QuestionHandler {
           }
         }
       }
-      foreach ($ids_to_delete as $id_to_delete) {
-        if ($id_to_delete) {
-          db_delete('quizz_multichoice_answers')
-            ->condition('id', $id_to_delete)
+
+      foreach ($ids_to_delete as $_id) {
+        if ($_id) {
+          db_delete('quizz_multichoice_alternative')
+            ->condition('id', $_id)
             ->execute();
         }
       }
@@ -213,7 +219,7 @@ class MultichoiceQuestion extends QuestionHandler {
    */
   private function insertAlternative($i) {
     $alternatives = $this->_normalizeAlternative($this->question->alternatives[$i]);
-    db_insert('quizz_multichoice_answers')
+    db_insert('quizz_multichoice_alternative')
       ->fields(array(
           'answer'                        => $alternatives['answer'],
           'answer_format'                 => $alternatives['answer_format'],
@@ -233,12 +239,11 @@ class MultichoiceQuestion extends QuestionHandler {
   /**
    * Helper function. Updates existing alternatives
    *
-   * @param $i
-   *  The alternative index
+   * @param int $i The alternative index.
    */
   private function updateAlternative($i) {
     $alternatives = $this->_normalizeAlternative($this->question->alternatives[$i]);
-    db_update('quizz_multichoice_answers')
+    db_update('quizz_multichoice_alternative')
       ->fields(array(
           'answer'                        => $alternatives['answer'],
           'answer_format'                 => $alternatives['answer_format'],
@@ -257,9 +262,7 @@ class MultichoiceQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of validate
-   *
-   * QuizQuestion#validate()
+   * {@inheritdoc}
    */
   public function validate(array &$form) {
     if ($this->question->choice_multi == 0) {
@@ -299,13 +302,11 @@ class MultichoiceQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of delete
-   *
-   * @see QuizQuestion#delete()
+   * {@inheritdoc}
    */
   public function delete($only_this_version = FALSE) {
     $delete_properties = db_delete('quizz_multichoice_question')->condition('qid', $this->question->qid);
-    $delete_answers = db_delete('quizz_multichoice_answers')->condition('question_qid', $this->question->qid);
+    $delete_answers = db_delete('quizz_multichoice_alternative')->condition('question_qid', $this->question->qid);
     $delete_results = db_delete('quizz_multichoice_answer')->condition('question_qid', $this->question->qid);
 
     if ($only_this_version) {
@@ -334,9 +335,7 @@ class MultichoiceQuestion extends QuestionHandler {
   }
 
   /**
-   * Implementation of load
-   *
-   * @see QuizQuestion#load()
+   * {@inheritdoc}
    */
   public function load() {
     if (isset($this->properties) && !empty($this->properties)) {
@@ -344,19 +343,25 @@ class MultichoiceQuestion extends QuestionHandler {
     }
     $props = parent::load();
 
-    $res_a = db_query('SELECT choice_multi, choice_random, choice_boolean FROM {quizz_multichoice_question}
-            WHERE qid = :qid AND vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchAssoc();
+    $res_a = db_query(
+      'SELECT choice_multi, choice_random, choice_boolean
+       FROM {quizz_multichoice_question}
+       WHERE qid = :qid AND vid = :vid', array(
+        ':qid' => $this->question->qid,
+        ':vid' => $this->question->vid
+      ))->fetchAssoc();
 
     if (is_array($res_a)) {
       $props = array_merge($props, $res_a);
     }
 
     // Load the answers
-    $res = db_query('SELECT id, answer, answer_format, feedback_if_chosen, feedback_if_chosen_format,
+    $res = db_query(
+      'SELECT id, answer, answer_format, feedback_if_chosen, feedback_if_chosen_format,
             feedback_if_not_chosen, feedback_if_not_chosen_format, score_if_chosen, score_if_not_chosen, weight
-            FROM {quizz_multichoice_answers}
-            WHERE question_qid = :question_qid AND question_vid = :question_vid
-            ORDER BY weight', array(
+       FROM {quizz_multichoice_alternative}
+       WHERE question_qid = :question_qid AND question_vid = :question_vid
+       ORDER BY weight', array(
         ':question_qid' => $this->question->qid,
         ':question_vid' => $this->question->vid));
     $props['alternatives'] = array(); // init array so it can be iterated even if empty
@@ -389,9 +394,13 @@ class MultichoiceQuestion extends QuestionHandler {
     if ($this->question->choice_random) {
       $this->shuffle($this->question->alternatives);
     }
+
     $content['answers'] = array(
-        '#markup' => theme('multichoice_answer_node_view', array('alternatives' => $this->question->alternatives, 'show_correct' => $this->viewCanRevealCorrect())),
         '#weight' => 2,
+        '#markup' => theme('quizz_multichoice_answer_question_view', array(
+            'alternatives' => $this->question->alternatives,
+            'show_correct' => $this->viewCanRevealCorrect()
+        )),
     );
 
     return $content;

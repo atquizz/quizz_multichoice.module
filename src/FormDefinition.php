@@ -112,7 +112,7 @@ class FormDefinition {
     // Get the nodes settings, users settings or default settings
     $default_settings = $this->getDefaultAltSettings();
 
-    $form['alternatives']['#theme'][] = 'multichoice_creation_form';
+    $form['alternatives']['#theme'][] = 'quizz_multichoice_creation_form';
     $form['alternatives']['settings'] = array(
         '#type'        => 'fieldset',
         '#title'       => t('Settings'),
