@@ -1,14 +1,6 @@
 <?php
 
 /**
- * Sponsored by: Norwegian Centre for Telemedicine
- * Code: falcon
- *
- * @file
- * multichoice Install (a quiz question type)
- */
-
-/**
  * Implements hook_install().
  */
 function quizz_multichoice_install() {
@@ -19,9 +11,8 @@ function quizz_multichoice_install() {
  * Implements hook_uninstall().
  */
 function quizz_multichoice_uninstall() {
-  variable_del('multichoice_def_scoring');
-  variable_del('multichoice_def_num_of_alts');
-  drupal_set_message(t("The multichoice module has been uninstalled. multichoice nodes may still exist, but they will not function properly."));
+  # variable_del('multichoice_def_scoring');
+  # variable_del('multichoice_def_num_of_alts');
 }
 
 /**
