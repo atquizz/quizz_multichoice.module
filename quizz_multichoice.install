@@ -28,34 +28,6 @@ function quizz_multichoice_uninstall() {
  * Implements hook_schema().
  */
 function quizz_multichoice_schema() {
-  // Stores the users answers to a question.
-  $schema['quizz_multichoice_answer'] = array(
-      'fields'      => array(
-          'id'           => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-          'result_id'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'question_qid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'question_vid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'choice_order' => array('type' => 'text'),
-      ),
-      'primary key' => array('id'),
-      'indexes'     => array(
-          'answer_id' => array('result_id', 'question_qid', 'question_vid'),
-      ),
-  );
-
-  $schema['quizz_multichoice_answer_multi'] = array(
-      'fields'      => array(
-          'user_answer_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'answer_id'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-      ),
-      'primary key' => array(
-          'user_answer_id', 'answer_id'
-      ),
-      'indexes'     => array(
-          'answer_id' => array('user_answer_id'),
-      ),
-  );
-
   $schema['quizz_multichoice_question'] = array(
       'fields'      => array(
           'qid'            => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
@@ -84,6 +56,34 @@ function quizz_multichoice_schema() {
       ),
       'primary key' => array('id'),
       'indexes'     => array('quiz_id' => array('question_qid', 'question_vid'))
+  );
+
+  // Stores the users answers to a question.
+  $schema['quizz_multichoice_answer'] = array(
+      'fields'      => array(
+          'id'           => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+          'result_id'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'question_qid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'question_vid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'choice_order' => array('type' => 'text'),
+      ),
+      'primary key' => array('id'),
+      'indexes'     => array(
+          'answer_id' => array('result_id', 'question_qid', 'question_vid'),
+      ),
+  );
+
+  $schema['quizz_multichoice_answer_multi'] = array(
+      'fields'      => array(
+          'user_answer_id' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+          'answer_id'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+      ),
+      'primary key' => array(
+          'user_answer_id', 'answer_id'
+      ),
+      'indexes'     => array(
+          'answer_id' => array('user_answer_id'),
+      ),
   );
 
   $schema['quizz_multichoice_user_settings'] = array(
