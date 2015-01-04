@@ -7,6 +7,9 @@ use Drupal\quizz_question\QuestionHandler;
 
 class MultichoiceQuestion extends QuestionHandler {
 
+  protected $base_table = 'quizz_multichoice_question';
+  protected $base_answer_table = 'quizz_multichoice_answer';
+
   /**
    * Forgive some possible logical flaws in the user input.
    */
@@ -304,34 +307,15 @@ class MultichoiceQuestion extends QuestionHandler {
   /**
    * {@inheritdoc}
    */
-  public function delete($only_this_version = FALSE) {
-    $delete_properties = db_delete('quizz_multichoice_question')->condition('qid', $this->question->qid);
-    $delete_answers = db_delete('quizz_multichoice_alternative')->condition('question_qid', $this->question->qid);
-    $delete_results = db_delete('quizz_multichoice_answer')->condition('question_qid', $this->question->qid);
+  public function delete($single_revision = FALSE) {
+    $key = $single_revision ? 'question_vid' : 'question_qid';
+    $id = $single_revision ? $this->question->vid : $this->question->qid;
 
-    if ($only_this_version) {
-      $delete_properties->condition('vid', $this->question->vid);
-      $delete_answers->condition('question_vid', $this->question->vid);
-      $delete_results->condition('question_vid', $this->question->vid);
-    }
+    db_delete('quizz_multichoice_alternative')
+      ->condition($key, $id)
+      ->execute();
 
-    // Delete from table quizz_multichoice_answer_multi
-    if ($only_this_version) {
-      $user_answer_id = db_query('SELECT id FROM {quizz_multichoice_answer} WHERE question_qid = :qid AND question_vid = :vid', array(':qid' => $this->question->qid, ':vid' => $this->question->vid))->fetchCol();
-    }
-    else {
-      $user_answer_id = db_query('SELECT id FROM {quizz_multichoice_answer} WHERE question_qid = :qid', array(':qid' => $this->question->qid))->fetchCol();
-    }
-
-    if (!empty($user_answer_id)) {
-      db_delete('quizz_multichoice_answer_multi')
-        ->condition('user_answer_id', $user_answer_id, 'IN')
-        ->execute();
-    }
-    $delete_properties->execute();
-    $delete_answers->execute();
-    $delete_results->execute();
-    parent::delete($only_this_version);
+    parent::delete($single_revision);
   }
 
   /**
@@ -415,15 +399,15 @@ class MultichoiceQuestion extends QuestionHandler {
   public function getAnsweringForm(array $form_state = NULL, $result_id) {
     $element = parent::getAnsweringForm($form_state, $result_id);
 
-    /* We use an array looking key to be able to store multiple answers in tries.
-     * At the moment all user answers have to be stored in tries. This is something we plan
-     * to fix in quiz 5.x.
-     */
+    // We use an array looking key to be able to store multiple answers in tries.
+    // At the moment all user answers have to be stored in tries. This is
+    // something we plan to fix in quiz 5.x.
     $element['#theme'] = 'multichoice_alternative';
     if (isset($result_id)) {
       // This question has already been answered. We load the answer.
       $response = new MultichoiceResponse($result_id, $this->question);
     }
+
     for ($i = 0; isset($this->question->alternatives[$i]); $i++) {
       $short = $this->question->alternatives[$i];
       $answer_markup = check_markup($short['answer']['value'], $short['answer']['format']);
@@ -431,13 +415,15 @@ class MultichoiceQuestion extends QuestionHandler {
         $element['user_answer']['#options'][$short['id']] = $answer_markup;
       }
     }
+
     if ($this->question->choice_random) {
       // We save the choice order so that the order will be the same in the answer report
       $element['choice_order'] = array(
           '#type'  => 'hidden',
-          '#value' => implode(',', $this->shuffle($element['user_answer']['#options'])),
+          '#value' => $this->shuffle($element['user_answer']['#options']),
       );
     }
+
     if ($this->question->choice_multi) {
       $element['user_answer']['#type'] = 'checkboxes';
       $element['user_answer']['#title'] = t('Choose all that apply');
