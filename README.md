@@ -23,7 +23,7 @@ separate storage for this module.
 
 ### 3.  Configuration
 
-Settings are to be found here: admin/quiz/questions_settings
+Settings are to be found here: admin/quizz/questions_settings
 
 The only available setting is the number of default alternatives. This decides
 how many alternatives will be shown on the node-form by default. The question
