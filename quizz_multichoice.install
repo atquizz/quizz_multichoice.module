@@ -62,8 +62,8 @@ function quizz_multichoice_schema() {
   $schema['quizz_multichoice_answer'] = array(
       'fields'      => array(
           'answer_id'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-          'choice_order' => array('type' => 'text', 'size' => 'normal'),
-          'user_answer'  => array('type' => 'text', 'size' => 'normal'),
+          'choice_order' => array('type' => 'text', 'size' => 'normal', 'description' => 'Serialized of int array'),
+          'user_answer'  => array('type' => 'text', 'size' => 'normal', 'description' => 'Serialized of int array'),
       ),
       'primary key' => array('answer_id'),
   );
