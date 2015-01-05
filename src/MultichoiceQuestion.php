@@ -3,6 +3,7 @@
 namespace Drupal\quizz_multichoice;
 
 use Drupal\quizz_multichoice\FormDefinition;
+use Drupal\quizz_question\Entity\QuestionType;
 use Drupal\quizz_question\QuestionHandler;
 
 class MultichoiceQuestion extends QuestionHandler {
@@ -522,6 +523,32 @@ class MultichoiceQuestion extends QuestionHandler {
     if (!$this->question->choice_multi && is_null($form_state['values']['question'][$this->question->qid]['answer']['user_answer'])) {
       form_set_error('', t('You must provide an answer.'));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function questionTypeConfigForm(QuestionType $question_type) {
+    $form = array('#validate' => array('quizz_multichoice_config_validate'));
+
+    $form['multichoice_def_num_of_alts'] = array(
+        '#type'          => 'textfield',
+        '#title'         => t('Default number of alternatives'),
+        '#default_value' => $question_type->getConfig('multichoice_def_num_of_alts', 2),
+    );
+
+    $form['multichoice_def_scoring'] = array(
+        '#type'          => 'radios',
+        '#title'         => t('Default scoring method'),
+        '#description'   => t('Choose the default scoring method for questions with multiple correct answers.'),
+        '#options'       => array(
+            0 => t('Give minus one point for incorrect answers'),
+            1 => t("Give one point for each incorrect option that haven't been chosen"),
+        ),
+        '#default_value' => $question_type->getConfig('multichoice_def_scoring', 0),
+    );
+
+    return $form;
   }
 
 }
