@@ -165,7 +165,9 @@ class MultichoiceTestCase extends QuizTestCase {
         'alternatives[1][answer][value]' => 'Incorrect answer 2',
         'alternatives[1][weight]'        => 2,
         'alternatives[2][answer][value]' => 'Incorrect answer 3',
-        'alternatives[2][weight]'        => 3), t('Save question'));
+        'alternatives[2][weight]'        => 3
+      ), t('Save question'));
+    $this->drupalPost("quiz/{$quiz->qid}/questions", array("revision[{$question->qid}-{$question->vid}]" => 1), t('Submit'));
 
     $this->drupalGet("quiz/$quiz->qid/take");
     $a = strpos($this->content, 'Correct answer 1');
@@ -175,11 +177,12 @@ class MultichoiceTestCase extends QuizTestCase {
     $this->assertTrue($a < $b, 'A comes before B');
     $this->assertTrue($b < $c, 'B comes before C');
 
-    $this->drupalPost(NULL, array("question[$question->qid][answer][user_answer]" => 1), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer][user_answer]" => 4), t('Finish'));
     $this->assertText('You got 1 of 1 possible points.');
     $this->assertText('Your score: 100%');
 
     // Now screw them up.
+    $question = quizz_question_load($question->qid, NULL, TRUE);
     $this->drupalGet("quiz-question/$question->qid/edit");
     $this->drupalPost(NULL, array(
         'alternatives[0][weight]' => 3,
@@ -201,7 +204,7 @@ class MultichoiceTestCase extends QuizTestCase {
     $this->assertTrue($b > $c, 'B comes after C');
 
     // Check that the correct answer did not change even with the weight adjustment.
-    $this->drupalPost(NULL, array("question[$question->qid][answer][user_answer]" => 4), t('Finish'));
+    $this->drupalPost(NULL, array("question[$question->qid][answer][user_answer]" => 7), t('Finish'));
     $this->assertText('You got 1 of 1 possible points.');
     $this->assertText('Your score: 100%');
   }
