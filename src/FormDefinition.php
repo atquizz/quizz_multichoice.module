@@ -188,7 +188,7 @@ class FormDefinition {
         '#default_value' => $short['answer']['value'],
         '#required'      => $i < 2,
         '#format'        => isset($short['answer']['format']) ? $short['answer']['format'] : NULL,
-        '#rows'          => 3,
+        '#rows'          => 2,
     );
 
     $form['alternatives'][$i]['advanced'] = array(
@@ -204,11 +204,11 @@ class FormDefinition {
         '#parents'       => array('alternatives', $i, 'feedback_if_chosen'),
         '#default_value' => $short['feedback_if_chosen']['value'],
         '#format'        => isset($short['feedback_if_chosen']['format']) ? $short['feedback_if_chosen']['format'] : NULL,
-        '#rows'          => 3,
+        '#rows'          => 2,
     );
 
-    // We add 'helper' to trick the current version of the wysiwyg module to add an editor to several
-    // textareas in the same fieldset
+    // We add 'helper' to trick the current version of the wysiwyg module to add
+    // an editor to several textareas in the same fieldset
     $form['alternatives'][$i]['advanced']['helper']['feedback_if_not_chosen'] = array(
         '#type'          => 'text_format',
         '#title'         => t('Feedback if not chosen'),
@@ -216,7 +216,7 @@ class FormDefinition {
         '#parents'       => array('alternatives', $i, 'feedback_if_not_chosen'),
         '#default_value' => $short['feedback_if_not_chosen']['value'],
         '#format'        => isset($short['feedback_if_not_chosen']['format']) ? $short['feedback_if_not_chosen']['format'] : NULL,
-        '#rows'          => 3,
+        '#rows'          => 2,
     );
 
     $form['alternatives'][$i]['advanced']['score_if_chosen'] = array(
