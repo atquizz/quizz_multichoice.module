@@ -269,39 +269,39 @@ class MultichoiceQuestion extends QuestionHandler {
    * {@inheritdoc}
    */
   public function validate(array &$form) {
-    if ($this->question->choice_multi == 0) {
-      $found_one_correct = FALSE;
-      for ($i = 0; (isset($this->question->alternatives[$i]) && is_array($this->question->alternatives[$i])); $i++) {
-        $short = $this->question->alternatives[$i];
-        if (drupal_strlen($this->checkMarkup($i, 'answer')) < 1) {
-          continue;
-        }
-        if ($short['correct'] == 1) {
-          if ($found_one_correct) {
-            // We don't display an error message here since we allow alternatives to be partially correct
-          }
-          else {
-            $found_one_correct = TRUE;
-          }
-        }
-      }
-      if (!$found_one_correct) {
-        form_set_error('choice_multi', t('You have not marked any alternatives as correct. If there are no correct alternatives you should allow multiple answers.'));
+    if (!$this->question->choice_multi) {
+      return $this->validateCaseSinglechoice();
+    }
+
+    for ($i = 0; isset($this->question->alternatives[$i]); $i++) {
+      if (drupal_strlen($this->checkMarkup($i, 'answer'))) {
+        return $this->validateCaseMultichoice($i);
       }
     }
-    else {
-      for ($i = 0; isset($this->question->alternatives[$i]); $i++) {
-        $short = $this->question->alternatives[$i];
-        if (strlen($this->checkMarkup($i, 'answer')) < 1) {
-          continue;
-        }
-        if ($short['score_if_chosen'] < $short['score_if_not_chosen'] && $short['correct']) {
-          form_set_error("alternatives][$i][score_if_not_chosen", t('The alternative is marked as correct, but gives more points if you don\'t select it.'));
-        }
-        elseif ($short['score_if_chosen'] > $short['score_if_not_chosen'] && !$short['correct']) {
-          form_set_error("alternatives][$i][score_if_chosen", t('The alternative is not marked as correct, but gives more points if you select it.'));
-        }
-      }
+  }
+
+  private function validateCaseSinglechoice() {
+    for ($i = 0; (isset($this->question->alternatives[$i]) && is_array($this->question->alternatives[$i])); $i++) {
+      $length = drupal_strlen($this->checkMarkup($i, 'answer'));
+      $correct = $this->question->alternatives[$i]['correct'];
+      $length && $correct && ($has_correct = TRUE);
+    }
+
+    if (empty($has_correct)) {
+      $msg = t('You have not marked any alternatives as correct. If there are no correct alternatives you should allow multiple answers.');
+      form_set_error('choice_multi', $msg);
+    }
+  }
+
+  private function validateCaseMultichoice($i) {
+    $short = $this->question->alternatives[$i];
+    if ($short['score_if_chosen'] < $short['score_if_not_chosen'] && $short['correct']) {
+      $msg = t('The alternative is marked as correct, but gives more points if you don\'t select it.');
+      form_set_error("alternatives][$i][score_if_not_chosen", $msg);
+    }
+    elseif ($short['score_if_chosen'] > $short['score_if_not_chosen'] && !$short['correct']) {
+      $msg = t('The alternative is not marked as correct, but gives more points if you select it.');
+      form_set_error("alternatives][$i][score_if_chosen", $msg);
     }
   }
 

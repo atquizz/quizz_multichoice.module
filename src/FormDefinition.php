@@ -88,24 +88,24 @@ class FormDefinition {
     drupal_add_tabledrag('multichoice-alternatives-table', 'order', 'sibling', 'multichoice-alternative-weight');
 
     $form['alternatives'] = array(
-        '#theme'                      => array('multichoice_alternative_creation_table'),
-        '#type'                       => 'fieldset',
-        '#title'                      => t('Answer'),
-        '#collapsible'                => TRUE,
-        '#collapsed'                  => FALSE,
-        '#weight'                     => -4,
-        '#tree'                       => TRUE,
-        '#prefix'                     => '<div class="clear-block" id="multichoice-alternatives-wrapper">',
-        '#suffix'                     => '</div>',
-        'multichoice_add_alternative' => array(
-            '#type'   => 'button',
-            '#value'  => t('Add choice'),
-            '#ajax'   => array(
-                'method'   => 'replace',
-                'wrapper'  => 'multichoice-alternatives-wrapper',
-                'callback' => 'quizz_multichoice_add_alternative_ajax_callback',
-            ),
-            '#weight' => 50,
+        '#theme'       => array('multichoice_alternative_creation_table'),
+        '#type'        => 'fieldset',
+        '#title'       => t('Answer'),
+        '#collapsible' => TRUE,
+        '#collapsed'   => FALSE,
+        '#weight'      => -4,
+        '#tree'        => TRUE,
+        '#prefix'      => '<div class="clear-block" id="multichoice-alternatives-wrapper">',
+        '#suffix'      => '</div>',
+        'more'         => array('#limit_validation_errors' => array()) + array(
+          '#type'   => 'button',
+          '#value'  => t('Add choice'),
+          '#ajax'   => array(
+              'method'   => 'replace',
+              'wrapper'  => 'multichoice-alternatives-wrapper',
+              'callback' => 'quizz_multichoice_add_alternative_ajax_callback',
+          ),
+          '#weight' => 50,
         ),
     );
 
