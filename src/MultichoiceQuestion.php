@@ -11,6 +11,9 @@ class MultichoiceQuestion extends QuestionHandler {
   protected $base_table = 'quizz_multichoice_question';
   protected $base_answer_table = 'quizz_multichoice_answer';
 
+  /** @var int */
+  public $default_max_score = 0;
+
   /**
    * Forgive some possible logical flaws in the user input.
    */
